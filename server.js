@@ -36,67 +36,61 @@ app.use(express.static("public"));
 // Note: Feel free to replace the example routes below with your own
 const usersRoutes = require("./routes/users");
 const widgetsRoutes = require("./routes/widgets");
+const resourcesRoutes = require("./routes/resources.js");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
-app.use("/api/users", usersRoutes(db));
-app.use("/api/widgets", widgetsRoutes(db));
-// Note: mount other resources here, using the same pattern above
+app.use("/users", usersRoutes(db));
+app.use("/widgets", widgetsRoutes(db));
+app.use("/resources", resourcesRoutes(db));
 
+
+// Note: mount other resources here, using the same pattern above
 
 // Home page
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).
-
-//CJ updated to render login page or main logged in page
-app.get("/", (req, res) => {
-  // if (!req.session.user_id) {
-  //   res.redirect("/home_login_register");
-  // } else {
-    res.render("1_homepage_nl");
-  // }
-});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
 
-//CJ Routes to be moved elsewhere(?)
+//CJ updated to render login page or main logged in page
+app.get("/", (req, res) => {
+  // if (!req.session.user_id) {
+  //   res.redirect("/register");
+  // } else {
+    res.render("1_homepage_nl");
+});
+
+app.get('/login', (req, res) => {
+  res.render("3_login");
+});
+// demo - just login as one person
+
+
+app.get('/login/:id', (req, res) => {
+  req.session.user_id = req.params.id;
+  res.redirect('/');
+});
 
 
 // registration page
-// app.get("/register", (req, res) => {
-//   if (req.session.user_id) {
-//     res.redirect("/home_logged_in");
-//   } else {
-//     res.render("register");
-//   }
-// });
+app.get("/register", (req, res) => {
+  // if (req.session) {
+  //   res.redirect("/home_logged_in");
+  // } else {
+    res.render("2_register");
+});
 
-// direct to resource page
-// app.get("/resource/:id", (req, res) => {
-//   if (!req.session.user_id) {
-//     res.redirect("/home_login_register");
-//   } else {
-//     res.render("resource_url");
-//   }
-// });
 
-// direct to add new resource page (will need page name checking)
-// app.get ("/resource_new", (req, res) => {
-//   if (!req.session.user_id) {
-//     res.redirect("/home_login_register");
-//   } else {
-//     res.render("resource_new");
-//   }
-// });
 
-//Direct to logged in home page
-// app.get ("/home_logged_in", (req, res) => {
-//   if (!req.session.user_id) {
-//     res.redirect("/home_login_register");
-//   } else {
-//     res.render("home_logged_in");
-//   }
-// });
+// Direct to logged in home page
+app.get ("/home_logged_in", (req, res) => {
+  // if (!req.session.user_id) {
+  //   res.redirect("/home_login_register");
+  // } else {
+    res.render("4_homepage_logged");
+  // }
+});
